@@ -2,8 +2,8 @@ console.log("working");
 
 // let map = L.map('mapid').setView([40.7, -94.5], 4);
 
-// Create the map object with center at the San Francisco airport.
-let map = L.map('mapid').setView([37.5, -122.5], 10);
+// Create the map object with center and zoom level.
+let map = L.map('mapid').setView([30, 30], 2);
 
 // Add GeoJSON data.
 let sanFranAirport =
@@ -32,9 +32,9 @@ let sanFranAirport =
 // Grabbing our GeoJSON data.
 L.geoJSON(sanFranAirport, {
     // We turn each feature into a marker on the map.
-    pointToLayer: function (feature, latlng) {
-        console.log(feature);
-        return L.marker(latlng);
+    onEachFeature: function (feature, layer) {
+        console.log(layer);
+        layer.bindPopup("<h2>" + feature.properties.city + "</h2>");
     }
 
 }).addTo(map);
@@ -44,6 +44,15 @@ let streets = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v11/t
     maxZoom: 18,
     accessToken: API_KEY
 });
+// Grabbing our GeoJSON data.
+d3.json(airportData).then(function (data) {
+    console.log(data);
+    // Creating a GeoJSON layer with the retrieved data.
+    L.geoJSON(data).addTo(map);
+});
+
+// Accessing the airport GeoJSON URL
+let airportData = "https://raw.githubusercontent.com/jacobbmorton/Mapping_Earthquakes/main/majorAirports.json";
 
 // Get data from cities.js
 let cityData = cities;

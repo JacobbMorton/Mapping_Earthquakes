@@ -1,6 +1,7 @@
 console.log("working");
 
-let map = L.map('mapid').setView([40.7, -94.5], 4);
+// let map = L.map('mapid').setView([40.7, -94.5], 4);
+
 // Create the map object with center at the San Francisco airport.
 let map = L.map('mapid').setView([37.5, -122.5], 10);
 
@@ -28,19 +29,15 @@ let sanFranAirport =
     }
     ]
 };
-L.geoJSON(geojsonFeature).addTo(map);
+// Grabbing our GeoJSON data.
+L.geoJSON(sanFranAirport, {
+    // We turn each feature into a marker on the map.
+    pointToLayer: function (feature, latlng) {
+        console.log(feature);
+        return L.marker(latlng);
+    }
 
-// Coordinates for each point to be used in the line.
-let line = [
-    [33.9416, -118.4085],
-    [37.6213, -122.3790]
-];
-
-// Create a polyline using the line coordinates and make the line red.
-L.polyline(line, {
-    color: "red"
 }).addTo(map);
-
 // We create the tile layer that will be the background of our map.
 let streets = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token={accessToken}', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -67,8 +64,6 @@ L.circle([34.0522, -118.2437], {
     color: "black",
     fillColor: '#ffffa1'
 }).addTo(map);
-
-
 
 // Then we add our 'graymap' tile layer to the map.
 streets.addTo(map);

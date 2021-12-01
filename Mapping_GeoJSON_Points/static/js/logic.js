@@ -54,16 +54,16 @@ let sanFranAirport =
     ]
 };
 
-// Grabbing our GeoJSON data.
-L.geoJSON(sanFranAirport, {
-    // We turn each feature into a marker on the map.
-    onEachFeature: function (feature, layer) {
-        console.log(layer);
-        layer.bindPopup("<h2>" + "Airport Code: " + feature.properties.faa + "</h2>");
-        layer.bindPopup("<h2>" + "Airport Name: " + feature.properties.name + "</h2>");
-    }
+// // Grabbing our GeoJSON data.
+// L.geoJSON(sanFranAirport, {
+//     // We turn each feature into a marker on the map.
+//     onEachFeature: function (feature, layer) {
+//         console.log(layer);
+//         layer.bindPopup("<h2>" + "Airport Code: " + feature.properties.faa + "<br>" + "<hr>" + "<br>" + "Airport Name: " + feature.properties.name + "</h2>");
+//         // layer.bindPopup("<h2>" + "Airport Name: " + feature.properties.name + "</h2>");
+//     }
 
-}).addTo(map);
+// }).addTo(map);
 
 // Accessing the airport GeoJSON URL
 let airportData = "https://raw.githubusercontent.com/JacobbMorton/Mapping_Earthquakes/mapping_geojson_points/Mapping_GeoJSON_Points/static/data/majorAirports.json";
@@ -75,8 +75,8 @@ d3.json(airportData).then(function (data) {
     L.geoJSON(data, {
         onEachFeature: function (feature, layer) {
             console.log(layer);
-            layer.bindPopup("<h2>" + "Airport Code: " + feature.properties.faa + "</h2>");
-            layer.bindPopup("<h2>" + "Airport Name: " + feature.properties.name + "</h2>");
+            layer.bindPopup("<h2>" + "Airport Code: " + feature.properties.faa + "<br>" + "<hr>" + "Airport Name: " + feature.properties.name + "</h2>");
+            // layer.bindPopup("<h2>" + "Airport Name: " + feature.properties.name + "</h2>");
         }}).addTo(map);
 });
 

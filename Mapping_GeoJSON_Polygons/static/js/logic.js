@@ -29,8 +29,9 @@ let baseMaps = {
 
 // Create a style for the lines.
 let myStyle = {
-    color: "#ffffa1",
-    weight: 2
+    color: "Blue",
+    fillColor: "Yellow",
+    weight: 1
 }
 
 // Pass our map layers into our layers control and add the layers control to the map.
@@ -38,24 +39,24 @@ L.control.layers(baseMaps).addTo(map);
 
 
 
-let torontoData = "https://raw.githubusercontent.com/JacobbMorton/Mapping_Earthquakes/Mapping_geojson_linestrings/Mapping_GeoJSON_linestrings/static/data/torontoRoutes.json"
+let torontoHoods = "https://raw.githubusercontent.com/JacobbMorton/Mapping_Earthquakes/Mapping_GeoJSON_Polygons/Mapping_GeoJSON_Polygons/static/data/torontoNeighborhoods.json"
 
 // Grabbing our GeoJSON data.
-d3.json(torontoData).then(function (data) {
+d3.json(torontoHoods).then(function (data) {
     console.log(data);
     // Creating a GeoJSON layer with the retrieved data.
     L.geoJSON(data, {
         style: myStyle,
         onEachFeature: function (feature, layer) {
             console.log(layer);
-            layer.bindPopup("<h3>" + "Airline: " + feature.properties.airline + "<br>" + "<hr>" + "Destination: " + feature.properties.dst + "</h3>");
+            layer.bindPopup("<h3>" + "Neighborhood: " + feature.properties.AREA_NAME + "</h3>");
             
         }
     }).addTo(map);
     
 });
 
-streets.addTo(map);
+satelliteStreets.addTo(map);
 
 
 

@@ -17,7 +17,7 @@ let dark = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/dark-v10/tiles/{
 
 // Create the map object with center, zoom level and default layer.
 let map = L.map('mapid', {
-    center: [30, 30],
+    center: [44.0, -80.0],
     zoom: 2,
     layers: [streets]
 })
@@ -26,6 +26,12 @@ let baseMaps = {
     Light: streets,
     Dark: dark
 };
+
+// Create a style for the lines.
+let myStyle = {
+    color: "#ffffa1",
+    weight: 2
+}
 
 // Pass our map layers into our layers control and add the layers control to the map.
 L.control.layers(baseMaps).addTo(map);
@@ -38,9 +44,19 @@ let torontoData = "https://raw.githubusercontent.com/JacobbMorton/Mapping_Earthq
 d3.json(torontoData).then(function (data) {
     console.log(data);
     // Creating a GeoJSON layer with the retrieved data.
-    L.geoJSON(data).addTo(map);
+    L.geoJSON(data, {
+        style: myStyle,
+        onEachFeature: function (feature, layer) {
+            console.log(layer);
+            layer.bindPopup("<h3>" + "Airline: " + feature.properties.airline + "<br>" + "<hr>" + "Destination: " + feature.properties.dst + "</h3>");
+            
+        }
+    }).addTo(map);
+    
 });
 
-streets.addTo(map);
+dark.addTo(map);
+
+
 
 

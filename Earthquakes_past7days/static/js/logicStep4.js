@@ -27,6 +27,14 @@ let baseMaps = {
     "Satellite" : satelliteStreets
 };
 
+let earthquakes = new L.LayerGroup();
+
+let overlays = {
+    Earthquakes: earthquakes
+};
+
+L.control.layers(baseMaps, overlays).addTo(map);
+
 // Create a style for the lines.
 let myStyle = {
     color: "#ffffa1",
@@ -34,7 +42,7 @@ let myStyle = {
 }
 
 // Pass our map layers into our layers control and add the layers control to the map.
-L.control.layers(baseMaps).addTo(map);
+// L.control.layers(baseMaps).addTo(map);
 
 
 
@@ -42,41 +50,64 @@ let earthquakeData = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/
 
 // Grabbing our GeoJSON data.
 d3.json(earthquakeData).then(function (data) {
-    console.log(data);
-    
-    function getRadius(magnitude) {
-        if (magnitude === 0) {
-            return 1;
-        }
-        return magnitude * 4;
-    }
+    // console.log(data);
+    // This function determines the color of the circle based on the magnitude of the earthquake.
     function styleInfo(feature) {
         return {
             opacity: 1,
             fillOpacity: 1,
-            fillColor: "#ffae42",
+            fillColor: getColor(feature.properties.mag),
             color: "#000000",
             radius: getRadius(feature.properties.mag),
             stroke: true,
             weight: 0.5
         };
-    }
+    };
+    function getColor(magnitude) {
+        if (magnitude > 5) {
+            return "#ea2c2c";
+        }
+        if (magnitude > 4) {
+            return "#ea822c";
+        }
+        if (magnitude > 3) {
+            return "#ee9c00";
+        }
+        if (magnitude > 2) {
+            return "#eecc00";
+        }
+        if (magnitude > 1) {
+            return "#d4ee00";
+        }
+        return "#98ee00";
+    };
+    function getRadius(magnitude) {
+        if (magnitude === 0) {
+            return 1;
+        }
+        return magnitude * 4;
+    };
     // Creating a GeoJSON layer with the retrieved data.
     L.geoJSON(data, {
-        
         // We turn each feature into a circleMarker on the map.
-
         pointToLayer: function (feature, latlng) {
             console.log(data);
-            
             return L.circleMarker(latlng);
         },
-        style: styleInfo
-    }).addTo(map);
+        // We set the style for each circleMarker using our styleInfo function.
+        style: styleInfo,
+        // We create a popup for each circleMarker to display the magnitude and
+        //  location of the earthquake after the marker has been created and styled.
+        onEachFeature: function (feature, layer) {
+            layer.bindPopup("Magnitude: " + feature.properties.mag + "<br>Location: " + feature.properties.place);
+        }
+    
+    }).addTo(earthquakes);
     
 });
 
-streets.addTo(map);
+earthquakes.addTo(map);
+satelliteStreets.addTo(map);
 
 
 
